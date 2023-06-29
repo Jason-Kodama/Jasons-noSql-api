@@ -1,5 +1,5 @@
 const { Schema, Types } = require('mongoose');
-const dateFormat = require('../utils/dateFormat');
+const formatDate = require('../utils/format.js')
 
 const reactionSchema = new Schema(
     {
@@ -8,26 +8,27 @@ const reactionSchema = new Schema(
             default: () => new Types.ObjectId(),
         },
         reactionBody: {
-            type: String,
-            required: true,
+            type: String, 
+            required: true, 
+            minlength: 1,
             maxlength: 280
-        },
-        username: {
-            type: String,
-            required: true,
         },
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (timestamp) => dateFormat(timestamp),
+            get: (date) => formatDate(date)
+        }, 
+        username: { 
+            type: String, 
+            required: true
         },
     },
     {
-        toJSON: {
-            getters: true,
-        },
-        id: false,
+      toJSON: {
+        getters: true
+      },
+      id: false
     }
-);
+)
 
 module.exports = reactionSchema;

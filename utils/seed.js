@@ -1,5 +1,5 @@
 const connection = require('../config/connection');
-const { User, Thoughts, Reaction } = require('../models');
+const { User, Thought, Reaction } = require('../models');
 
 const users = [
     {
@@ -28,11 +28,11 @@ connection.on('error', (err) => err);
 
 connection.once('open', async () => {
     console.log('connected');
-    await Thoughts.deleteMany({});
+    await Thought.deleteMany({});
     await User.deleteMany({});
-  
+
     await User.collection.insertMany(users);
 
-    console.info('Seeding complete!');
+    console.info('Successfully seeded');
     process.exit(0);
-  });
+});
