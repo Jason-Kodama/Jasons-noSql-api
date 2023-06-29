@@ -2,36 +2,22 @@ const { Thoughts, User } = require('../models');
 
 const thoughtsController = {
     getAllThoughts(req, res) {
-        Thoughts.find({})
-        .populate({
-            path: 'reactions',
-            select: '-__v',
-        })
-        .select('-__v')
-        .sort({ _id: -1 })
-        .then((dbThoughtsData) => res.json(dbThoughtsData))
-        .catch((err) => {
-            res.sendStatus(err)
-        })
+        Thoughts.find()
+        .then((thoughts) => res.json(thoughts))
+        .catch((err) => res.status(500).json(err));
     },
 
     getThoughtsById({ params }, res) {
-        Thoughts.findOne({ _id: params.id })
-        .populate({
-            path: 'reactions',
-            select: '-__v',
-        })
-        .select('-__v')
-        .then((dbThoughtsData) => {
-            if (!dbThoughtsData) {
-                return res.status(404).json({ message: 'No thought with this id'})
-            }
-            res.json(dbThoughtsData)
-        })
-        .catch((err) => {
-            res.sendStatus(err)
-        });
-    },
+        Thoughts.findOne({ _id: req.params.thoughtId })
+      .select('-__v')
+      .populate('reactions')
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No thought with that ID' })
+          : res.json(thought)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
 
     createThoughts({ params, body }, res) {
         Thoughts.create(body)
